@@ -1,0 +1,14 @@
+# Thin image on top of the official prebuilt binary: redsocks + iptables so
+# container TCP to 127.0.0.0/8 is forwarded through a host SOCKS5 proxy that
+# can dial Windows loopback addresses (127.0.0.2, 127.0.0.3, ...).
+FROM autumn27/artex:latest
+USER root
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends iptables iproute2 redsocks \
+	&& rm -rf /var/lib/apt/lists/*
+COPY docker/host-loopback.sh /app/host-loopback.sh
+COPY docker/entrypoint-host-loopback.sh /app/entrypoint-host-loopback.sh
+RUN sed -i 's/\r$//' /app/host-loopback.sh /app/entrypoint-host-loopback.sh \
+	&& chmod +x /app/host-loopback.sh /app/entrypoint-host-loopback.sh
+ENTRYPOINT ["/app/entrypoint-host-loopback.sh"]
+CMD ["-addr", ":8787", "-proxy", ":8788"]

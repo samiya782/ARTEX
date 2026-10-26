@@ -1,0 +1,15 @@
+services:
+  artex:
+    image: artex:host-loopback
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.host-loopback
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv4.conf.all.route_localnet=1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      ARTEX_HOST_LOOPBACK: ${ARTEX_HOST_LOOPBACK:-1}
+      ARTEX_HOST_SOCKS_PORT: ${ARTEX_HOST_SOCKS_PORT:-11080}

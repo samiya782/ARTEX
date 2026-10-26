@@ -1,0 +1,3 @@
+Start-ARTEX-SOCKS.bat
+Start-ARTEX.bat
+Stop-ARTEX.bat
