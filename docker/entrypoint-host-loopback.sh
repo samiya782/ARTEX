@@ -6,7 +6,7 @@ set -eu
 # Wait for host SOCKS so "start with stack" races are tolerated.
 if [ "${ARTEX_HOST_LOOPBACK:-1}" != "0" ]; then
 	socks_port="${ARTEX_HOST_SOCKS_PORT:-11080}"
-	host_ip=$(getent hosts host.docker.internal 2>/dev/null | awk '{print $1; exit}')
+	host_ip=$(resolve_host_gateway_ipv4)
 	if [ -n "$host_ip" ] && command -v nc >/dev/null 2>&1; then
 		i=0
 		while [ "$i" -lt 30 ]; do
